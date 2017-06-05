@@ -1,20 +1,23 @@
 package com.fireboyev.menuapi.objects;
 
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
 
 public class Button {
 	private ItemStack item;
-	private int slot;
 	private Menu menu;
 	private ButtonExecutor executor;
+	private SlotIndex pos;
+	private int rawpos;
 
-	public Button(ItemStack item, int slot) {
+	public Button(ItemStack item, int index) {
 		this.item = item;
-		this.slot = slot;
+		this.pos = new SlotIndex(index);
+		this.rawpos = index;
 	}
 
-	public int getSlot() {
-		return slot;
+	public SlotIndex getSlotIndex() {
+		return pos;
 	}
 
 	public ItemStack getItemStack() {
@@ -22,12 +25,16 @@ public class Button {
 	}
 
 	public void setItemStack(ItemStack item) {
-		getMenu().getSlot(slot).set(item);
+		getMenu().getSlot(getSlotIndex()).set(item);
 		this.item = item;
 	}
 
 	public void setMenu(Menu menu) {
 		this.menu = menu;
+	}
+
+	public int getRawPos() {
+		return rawpos;
 	}
 
 	public Menu getMenu() {

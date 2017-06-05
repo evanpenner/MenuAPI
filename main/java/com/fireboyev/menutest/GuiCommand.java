@@ -12,6 +12,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStack.Builder;
 import org.spongepowered.api.item.inventory.property.InventoryDimension;
+import org.spongepowered.api.text.Text;
 
 import com.fireboyev.menuapi.objects.Button;
 import com.fireboyev.menuapi.objects.ButtonExecutor;
@@ -21,19 +22,28 @@ public class GuiCommand implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (src instanceof Player) {
 			Player player = (Player) src;
-			Menu menu = new Menu("Gui Test", new InventoryDimension(9, 1));
+			Menu menu = new Menu("Gui Test", new InventoryDimension(9, 2));
 			ItemStack sword = Sponge.getRegistry().createBuilder(Builder.class).itemType(ItemTypes.DIAMOND_SWORD)
 					.build();
 			Button button = new Button(sword, 5);
 			menu.registerButton(button);
 			button.setExecutor(new ButtonExecutor() {
 				public void onButtonClick(ClickInventoryEvent event, Menu menu, Button button, Player player) {
-					if (button.getItemStack().getItem().equals(ItemTypes.DIAMOND_SWORD))
+					player.sendMessage(Text.of("IT WORKS!"));
+					Button b;
+					System.out.println(button.getItemStack().getItem().getType().getName());
+					if (button.getItemStack().getItem().getType().equals(ItemTypes.DIAMOND_SWORD)) {
 						button.setItemStack(
 								Sponge.getRegistry().createBuilder(Builder.class).itemType(ItemTypes.APPLE).build());
-					else
+						b = new Button(Sponge.getRegistry().createBuilder(Builder.class)
+								.itemType(ItemTypes.CRAFTING_TABLE).build(), 0);
+					} else {
 						button.setItemStack(Sponge.getRegistry().createBuilder(Builder.class)
 								.itemType(ItemTypes.DIAMOND_SWORD).build());
+						b = new Button(
+								Sponge.getRegistry().createBuilder(Builder.class).itemType(ItemTypes.ANVIL).build(), 0);
+					}
+					menu.registerButton(b);
 					menu.refresh(player);
 				}
 			});

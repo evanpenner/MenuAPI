@@ -3,9 +3,10 @@ package com.fireboyev.menuapi;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
+import org.spongepowered.api.event.game.state.GamePostInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 import com.fireboyev.menuapi.objects.Menu;
@@ -19,10 +20,11 @@ public class MenuAPI {
 	private static MenuAPI plugin;
 
 	@Listener
-	public void onServerStart(GameStartedServerEvent event) {
+	public void onServerStart(GamePostInitializationEvent event) {
 		plugin = this;
 		menus = new HashMap<Player, Menu>();
 		logger.info("MenuAPI Loaded!");
+		Sponge.getEventManager().registerListeners(this, new InventoryInteractListener());
 	}
 
 	public static Object getInstance() {
