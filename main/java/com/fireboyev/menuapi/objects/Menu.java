@@ -14,6 +14,7 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
+import org.spongepowered.api.scheduler.Task;
 
 import com.fireboyev.menuapi.MenuAPI;
 
@@ -41,12 +42,15 @@ public class Menu {
 	}
 
 	public void refresh(Player player) {
-		inv.clear();
-		System.out.println(inv.totalItems());
-		for (Button button : buttons) {
-			getSlot(button.getSlotIndex()).set(button.getItemStack());
-		}
-		inv.totalItems();
+		Task.Builder taskBuilder = Task.builder();
+		taskBuilder.execute(new Runnable() {
+			public void run() {
+				inv.clear();
+				for (Button button : buttons) {
+					getSlot(button.getSlotIndex()).set(button.getItemStack());
+				}
+			}
+		}).delayTicks(1).submit(MenuAPI.getInstance());
 	}
 
 	public Button getButtonByPos(SlotIndex pos) {

@@ -25,7 +25,7 @@ public class Button {
 	}
 
 	public void setItemStack(ItemStack item) {
-		getMenu().getSlot(getSlotIndex()).set(item);
+		// getMenu().getSlot(getSlotIndex()).set(item); shouldn't need this now.
 		this.item = item;
 	}
 
