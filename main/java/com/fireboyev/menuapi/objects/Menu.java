@@ -44,6 +44,14 @@ public class Menu {
 		return name;
 	}
 
+	public void UnregisterButtons() {
+		buttons.clear();
+	}
+
+	public List<Button> getButtons() {
+		return buttons;
+	}
+
 	public void refresh(Player player) {
 		Task.Builder taskBuilder = Sponge.getRegistry().createBuilder(Task.Builder.class);
 		taskBuilder.execute(new Runnable() {
@@ -91,7 +99,4 @@ public class Menu {
 		player.openInventory(inv, Cause.builder().named("Menu Open", MenuAPI.getInstance()).build());
 	}
 
-	public List<Button> getButtons() {
-		return buttons;
-	}
 }
