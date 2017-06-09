@@ -12,9 +12,11 @@ import org.spongepowered.api.item.inventory.Inventory.Builder;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.InventoryDimension;
+import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.text.Text;
 
 import com.fireboyev.menuapi.MenuAPI;
 
@@ -26,7 +28,8 @@ public class Menu {
 	public Menu(String name, InventoryDimension size) {
 		this.buttons = new ArrayList<Button>();
 		Inventory inv = ((Builder) Sponge.getRegistry().createBuilder(Builder.class)).of(InventoryArchetypes.CHEST)
-				.property(InventoryDimension.PROPERTY_NAME, size).build(MenuAPI.getInstance());
+				.property(InventoryDimension.PROPERTY_NAME, size)
+				.property(InventoryTitle.PROPERTY_NAME, InventoryTitle.of(Text.of(name))).build(MenuAPI.getInstance());
 		this.inv = inv;
 		this.name = name;
 	}
@@ -42,7 +45,7 @@ public class Menu {
 	}
 
 	public void refresh(Player player) {
-		Task.Builder taskBuilder = Task.builder();
+		Task.Builder taskBuilder = Sponge.getRegistry().createBuilder(Task.Builder.class);
 		taskBuilder.execute(new Runnable() {
 			public void run() {
 				inv.clear();
