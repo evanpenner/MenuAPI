@@ -40,6 +40,10 @@ public class Menu {
 		buttons.add(button);
 	}
 
+	public boolean unregisterButton(Button button) {
+		return buttons.remove(button);
+	}
+
 	public String getName() {
 		return name;
 	}
