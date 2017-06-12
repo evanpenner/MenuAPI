@@ -44,6 +44,14 @@ public class Menu {
 		return buttons.remove(button);
 	}
 
+	public boolean unregisterButton(SlotIndex index) {
+		return buttons.remove(getButtonByPos(index));
+	}
+
+	public boolean unregisterButton(int index) {
+		return unregisterButton(new SlotIndex(index));
+	}
+
 	public String getName() {
 		return name;
 	}
