@@ -111,4 +111,9 @@ public class Menu {
 		player.openInventory(inv, Cause.builder().named("Menu Open", MenuAPI.getInstance()).build());
 	}
 
+	public void Close(Player player) {
+		player.closeInventory(Cause.builder().named("Menu Close", MenuAPI.getInstance()).build());
+		MenuAPI.removeViewer(player);
+	}
+
 }
