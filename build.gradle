@@ -1,0 +1,28 @@
+plugins {
+    id 'org.spongepowered.plugin' version '0.8.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = pluginGroup
+version = pluginVersion
+
+dependencies {
+    compile 'org.spongepowered:spongeapi:5.2.0-20170523.191214-6'
+}
+
+apply plugin: 'java'
+jar {
+    exclude 'com/fireboyev/menutest/**'
+}
+
+task testJar(type: Jar) {
+    from sourceSets.main.output
+    baseName = 'MenuAPI-test'
+}
+
+assemble.dependsOn(testJar)
+
+sponge.plugin.id = pluginId
