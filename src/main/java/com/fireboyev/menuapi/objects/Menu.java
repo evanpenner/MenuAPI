@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.Inventory.Builder;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
@@ -14,6 +13,7 @@ import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
@@ -90,7 +90,7 @@ public class Menu {
 	}
 
 	public Slot getSlot(SlotIndex pos) {
-		OrderedInventory o = inv.query(OrderedInventory.class);
+		OrderedInventory o = inv.query(QueryOperationTypes.INVENTORY_TYPE.of(OrderedInventory.class));
 		Slot slot = o.getSlot(pos).get();
 		return slot;
 	}
@@ -108,11 +108,11 @@ public class Menu {
 
 	public void Open(Player player) {
 		MenuAPI.registerViewer(player, this);
-		player.openInventory(inv, Cause.builder().named("Menu Open", MenuAPI.getInstance()).build());
+		player.openInventory(inv);
 	}
 
 	public void Close(Player player) {
-		player.closeInventory(Cause.builder().named("Menu Close", MenuAPI.getInstance()).build());
+		player.closeInventory();
 		MenuAPI.removeViewer(player);
 	}
 
