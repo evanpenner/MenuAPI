@@ -90,7 +90,7 @@ public class Menu {
 	}
 
 	public Slot getSlot(SlotIndex pos) {
-		OrderedInventory o = inv.query(QueryOperationTypes.INVENTORY_TYPE.of(OrderedInventory.class));
+		OrderedInventory o = inv.query(OrderedInventory.class).first();
 		Slot slot = o.getSlot(pos).get();
 		return slot;
 	}
