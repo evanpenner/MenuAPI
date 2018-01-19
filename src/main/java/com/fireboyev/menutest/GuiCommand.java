@@ -11,7 +11,6 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStack.Builder;
-import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.text.Text;
 
 import com.fireboyev.menuapi.objects.Button;
@@ -22,10 +21,10 @@ public class GuiCommand implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (src instanceof Player) {
 			Player player = (Player) src;
-			Menu menu = new Menu("Gui Test", new InventoryDimension(9, 2));
+			Menu menu = new Menu("Gui Test", 18);
 			ItemStack sword = Sponge.getRegistry().createBuilder(Builder.class).itemType(ItemTypes.DIAMOND_SWORD)
 					.build();
-			Button button = new Button(sword, 5);
+			Button button = new Button(sword, 12);
 			menu.registerButton(button);
 			button.setExecutor(new ButtonExecutor() {
 				public void onButtonClick(ClickInventoryEvent event, Menu menu, Button button, Player player) {

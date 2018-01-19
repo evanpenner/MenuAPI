@@ -3,17 +3,16 @@ package com.fireboyev.menuapi.objects;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.Inventory.Builder;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.property.InventoryDimension;
+import org.spongepowered.api.item.inventory.property.InventoryCapacity;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
-import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
@@ -25,18 +24,16 @@ public class Menu {
 	private Inventory inv;
 	private String name;
 
-	public Menu(String name, InventoryDimension size) {
+	public Menu(String name, int size) {
 		this.buttons = new ArrayList<Button>();
-		Inventory inv = ((Builder) Sponge.getRegistry().createBuilder(Builder.class)).of(InventoryArchetypes.CHEST)
-				.property(InventoryDimension.PROPERTY_NAME, size)
-				.property(InventoryTitle.PROPERTY_NAME, InventoryTitle.of(Text.of(name))).build(MenuAPI.getInstance());
-		this.inv = inv;
+		this.inv = Inventory.builder().of(InventoryArchetypes.CHEST).property(InventoryTitle.of(Text.of(name)))
+				.property(InventoryCapacity.of(size)).build(MenuAPI.getInstance());
 		this.name = name;
 	}
 
 	public void registerButton(Button button) {
 		button.setMenu(this);
-		getSlot(button.getRawPos()).set(button.getItemStack());
+		getSlot(button.getSlotIndex()).get().set(button.getItemStack());
 		buttons.add(button);
 	}
 
@@ -70,7 +67,7 @@ public class Menu {
 			public void run() {
 				inv.clear();
 				for (Button button : buttons) {
-					getSlot(button.getSlotIndex()).set(button.getItemStack());
+					getSlot(button.getSlotIndex()).get().set(button.getItemStack());
 				}
 			}
 		}).delayTicks(1).submit(MenuAPI.getInstance());
@@ -85,14 +82,13 @@ public class Menu {
 		return new Button(null, pos.getValue());
 	}
 
-	public Slot getSlot(int pos) {
+	public Optional<Slot> getSlot(int pos) {
 		return getSlot(new SlotIndex(pos));
 	}
 
-	public Slot getSlot(SlotIndex pos) {
-		OrderedInventory o = inv.query(OrderedInventory.class).first();
-		Slot slot = o.getSlot(pos).get();
-		return slot;
+	public Optional<Slot> getSlot(SlotIndex pos) {
+		OrderedInventory o = inv.query(OrderedInventory.class);
+		return o.getSlot(pos);
 	}
 
 	public SlotIndex getSlotPos(Slot slot) {
