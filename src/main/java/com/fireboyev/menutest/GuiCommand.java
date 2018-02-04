@@ -11,17 +11,19 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStack.Builder;
+import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.text.Text;
 
 import com.fireboyev.menuapi.objects.Button;
 import com.fireboyev.menuapi.objects.ButtonExecutor;
 import com.fireboyev.menuapi.objects.Menu;
+import com.fireboyev.menutest.menus.HomeMenu;
 
 public class GuiCommand implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (src instanceof Player) {
 			Player player = (Player) src;
-			Menu menu = new Menu("Gui Test", 18);
+			Menu menu = new Menu("Gui Test", new InventoryDimension(9, 2));
 			ItemStack sword = Sponge.getRegistry().createBuilder(Builder.class).itemType(ItemTypes.DIAMOND_SWORD)
 					.build();
 			Button button = new Button(sword, 12);
@@ -44,6 +46,16 @@ public class GuiCommand implements CommandExecutor {
 					}
 					menu.registerButton(b);
 					menu.refresh(player);
+				}
+			});
+			Button menuOpener = new Button(ItemStack.builder().itemType(ItemTypes.ARROW).build(), 17);
+			menu.registerButton(menuOpener);
+			menuOpener.setExecutor(new ButtonExecutor() {
+				
+				@Override
+				public void onButtonClick(ClickInventoryEvent event, Menu menu, Button button, Player player) {
+					player.sendMessage(Text.of("Opening the home menu..."));
+					HomeMenu.create(player);
 				}
 			});
 			menu.Open(player);

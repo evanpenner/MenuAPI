@@ -10,9 +10,10 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetypes;
 import org.spongepowered.api.item.inventory.Slot;
-import org.spongepowered.api.item.inventory.property.InventoryCapacity;
+import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.item.inventory.property.InventoryTitle;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.type.GridInventory;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
@@ -24,11 +25,14 @@ public class Menu {
 	private Inventory inv;
 	private String name;
 
-	public Menu(String name, int size) {
+	public Menu(String name, InventoryDimension size) {
+		this(Text.of(name), size);
+	}
+	public Menu(Text name, InventoryDimension size) {
 		this.buttons = new ArrayList<Button>();
-		this.inv = Inventory.builder().of(InventoryArchetypes.CHEST).property(InventoryTitle.of(Text.of(name)))
-				.property(InventoryCapacity.of(size)).build(MenuAPI.getInstance());
-		this.name = name;
+		this.inv = Inventory.builder().of(InventoryArchetypes.MENU_GRID).property(InventoryTitle.of(name))
+				.property(size).build(MenuAPI.getInstance());
+		this.name = name.toString();
 	}
 
 	public void registerButton(Button button) {
@@ -87,8 +91,8 @@ public class Menu {
 	}
 
 	public Optional<Slot> getSlot(SlotIndex pos) {
-		OrderedInventory o = inv.query(OrderedInventory.class);
-		return o.getSlot(pos);
+		GridInventory g = inv.query(GridInventory.class);
+		return g.getSlot(pos);
 	}
 
 	public SlotIndex getSlotPos(Slot slot) {
@@ -103,8 +107,18 @@ public class Menu {
 	}
 
 	public void Open(Player player) {
-		MenuAPI.registerViewer(player, this);
-		player.openInventory(inv);
+		//see if this fixes problem
+		player.closeInventory();
+		MenuAPI.removeViewer(player);
+		Menu menu = this;
+		Task.builder().delayTicks(10).execute(new Runnable() {
+			
+			@Override
+			public void run() {
+				MenuAPI.registerViewer(player, menu);
+				player.openInventory(inv);
+			}
+		}).submit(MenuAPI.getInstance());
 	}
 
 	public void Close(Player player) {
