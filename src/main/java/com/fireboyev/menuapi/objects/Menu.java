@@ -28,6 +28,7 @@ public class Menu {
 	public Menu(String name, InventoryDimension size) {
 		this(Text.of(name), size);
 	}
+
 	public Menu(Text name, InventoryDimension size) {
 		this.buttons = new ArrayList<Button>();
 		this.inv = Inventory.builder().of(InventoryArchetypes.MENU_GRID).property(InventoryTitle.of(name))
@@ -107,18 +108,11 @@ public class Menu {
 	}
 
 	public void Open(Player player) {
-		//see if this fixes problem
+		// see if this fixes problem
 		player.closeInventory();
 		MenuAPI.removeViewer(player);
-		Menu menu = this;
-		Task.builder().delayTicks(10).execute(new Runnable() {
-			
-			@Override
-			public void run() {
-				MenuAPI.registerViewer(player, menu);
-				player.openInventory(inv);
-			}
-		}).submit(MenuAPI.getInstance());
+		MenuAPI.registerViewer(player, this);
+		player.openInventory(inv);
 	}
 
 	public void Close(Player player) {
