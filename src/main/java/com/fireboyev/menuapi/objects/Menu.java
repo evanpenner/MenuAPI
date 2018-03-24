@@ -108,16 +108,19 @@ public class Menu {
 	}
 
 	public void Open(Player player) {
-		// see if this fixes problem
-		player.closeInventory();
-		MenuAPI.removeViewer(player);
-		MenuAPI.registerViewer(player, this);
-		player.openInventory(inv);
+		MenuAPI.getSyncExecutorService().execute(() -> {
+			player.closeInventory();
+			MenuAPI.removeViewer(player);
+			MenuAPI.registerViewer(player, this);
+			player.openInventory(inv);
+		});
 	}
 
 	public void Close(Player player) {
-		player.closeInventory();
-		MenuAPI.removeViewer(player);
+		MenuAPI.getSyncExecutorService().execute(() -> {
+			player.closeInventory();
+			MenuAPI.removeViewer(player);
+		});
 	}
 
 }
