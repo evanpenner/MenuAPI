@@ -11,6 +11,7 @@ import org.spongepowered.api.plugin.Plugin;
 
 import com.fireboyev.menuapi.objects.Menu;
 import com.google.inject.Inject;
+import org.spongepowered.api.scheduler.SpongeExecutorService;
 
 @Plugin(id = "menuapi", name = "MenuAPI", version = "1.0")
 public class MenuAPI {
@@ -19,11 +20,15 @@ public class MenuAPI {
 	private Logger logger;
 	private static MenuAPI plugin;
 
+	private static SpongeExecutorService syncExecutorService;
+
 	@Listener
 	public void onServerStart(GamePostInitializationEvent event) {
 		plugin = this;
 		menus = new HashMap<Player, Menu>();
 		logger.info("MenuAPI Loaded!");
+
+		syncExecutorService = Sponge.getScheduler().createSyncExecutor(this);
 		Sponge.getEventManager().registerListeners(this, new InventoryInteractListener());
 	}
 
@@ -50,5 +55,9 @@ public class MenuAPI {
 
 	public static Menu getViewingMenu(Player player) {
 		return menus.get(player);
+	}
+
+	public static SpongeExecutorService getSyncExecutorService() {
+		return syncExecutorService;
 	}
 }
