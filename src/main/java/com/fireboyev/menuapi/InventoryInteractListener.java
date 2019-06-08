@@ -38,6 +38,7 @@ public class InventoryInteractListener {
 					public void run() {
 						if (clicks < 2) {
 							Menu menu = MenuAPI.getViewingMenu(player);
+							if (event.getTransactions().isEmpty()) return;
 							SlotIndex slotPos = event.getTransactions().get(0).getSlot().getProperty(SlotIndex.class, "slotindex")
 									.get();
 							Button button = menu.getButtonByPos(slotPos);
